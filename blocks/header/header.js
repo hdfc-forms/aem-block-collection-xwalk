@@ -242,6 +242,16 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
+  // adapt header presentation based on page-type metadata (article/blog/generic fallback)
+  const pageType = getMetadata('page-type').trim().toLowerCase();
+  if (pageType === 'article' || pageType === 'blog') {
+    block.classList.add(`page-type-${pageType}`);
+    const badge = document.createElement('span');
+    badge.className = 'page-type-badge';
+    badge.textContent = pageType.charAt(0).toUpperCase() + pageType.slice(1);
+    navBrand.insertAdjacentElement('afterend', badge);
+  }
+
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     navWrapper.append(await buildBreadcrumbs());
   }

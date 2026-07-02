@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Teaser Compact Fixture</title>
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="stylesheet" href="/blocks/teaser/teaser.css">
+</head>
+<body>
+  <main>
+    <div class="section">
+      <!--
+        Table-to-div transform is already applied here (as it would be by the time
+        aem.js's block loader hands a block to decorate()) - each block starts as
+        one row div containing one div per authored column (image, content).
+      -->
+      <div id="teaser-default" class="teaser block" data-block-name="teaser" data-block-status="loading">
+        <div>
+          <div><img src="/icons/adventure.svg" alt="Adventure"></div>
+          <div>
+            <h2>Default Teaser</h2>
+            <p>A description of the default teaser variant used for comparison.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="teaser-compact" class="teaser compact block" data-block-name="teaser" data-block-status="loading">
+        <div>
+          <div><img src="/icons/adventure.svg" alt="Adventure"></div>
+          <div>
+            <h2>Compact Teaser</h2>
+            <p>A description of the compact teaser variant, for sidebar/in-list placement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    const { default: decorate } = await import('/blocks/teaser/teaser.js');
+    document.querySelectorAll('.teaser.block').forEach((block) => decorate(block));
+    document.body.dataset.decorated = 'true';
+  </script>
+</body>
+</html>

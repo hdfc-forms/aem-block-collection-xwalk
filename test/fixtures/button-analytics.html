@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Button Analytics Fixture</title>
+</head>
+<body>
+  <main>
+    <div class="section">
+      <!--
+        default .button: has href, visible text used as name/next-page. Used ONLY by
+        the "never prevents default navigation" test, which needs a real same-tab
+        navigation to prove preventDefault() is never called - kept target-less
+        deliberately so that test's page.url() assertion is meaningful.
+      -->
+      <p class="button-container"><a href="/en/adventures" class="button" title="Explore Adventures">Explore Adventures</a></p>
+
+      <!--
+        View Details .button: identical semantics to "Explore Adventures" (real
+        href, visible text = next page name) but target="_blank" so clicking it
+        opens a new tab instead of navigating the current document. This is what
+        the payload-content test uses - it only cares about the digitalData object
+        the click produces, and a same-tab navigation (even an instantly-fulfilled
+        mock one) risks tearing down the page's JS execution context before the
+        console message's arguments can be read back out via CDP. target="_blank"
+        sidesteps that race entirely: the original page/console never navigates.
+      -->
+      <p class="button-container"><a href="/en/view-details" class="button" target="_blank" title="View Details">View Details</a></p>
+
+      <!--
+        no-target .button: per Architect design (02-architect-design.md Feature 1),
+        the "no-target" fallback fires when the anchor has NO href attribute at all
+        (e.g. a modal-trigger/JS-driven button) - not for a placeholder href="#",
+        which is still a truthy href and would resolve via the link-text branch.
+      -->
+      <p class="button-container"><a class="button" title="Open Modal" role="button" tabindex="0" data-modal-trigger="true">Open Modal</a></p>
+
+      <!--
+        override .button: data-analytics-name should win over visible text.
+        target="_blank" for the same context-preservation reason as "View Details"
+        above - this link is only used by the override test, which reads the
+        console payload after the click.
+      -->
+      <p class="button-container"><a href="/en/sign-up" class="button primary" target="_blank" data-analytics-name="signup-cta" title="Sign up now, it only takes a minute">Sign up now, it only takes a minute</a></p>
+    </div>
+  </main>
+
+  <script type="module">
+    // Mirrors scripts/delayed.js being imported ~3s after first render in the
+    // real loadPage() pipeline (scripts.js: window.setTimeout(() => import('./delayed.js'), 3000)).
+    // We import it directly and immediately here since the fixture's only goal
+    // is to exercise the delegated click listener + pub/sub wiring it registers,
+    // not to test the timing of the delay itself.
+    import '/scripts/delayed.js';
+  </script>
+</body>
+</html>

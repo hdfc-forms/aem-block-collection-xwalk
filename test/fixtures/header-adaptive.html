@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Header Adaptive Fixture</title>
+  <!--
+    page-type meta is injected by the test itself (via page.addInitScript / page.goto
+    with a query param handled below) so one fixture can cover all three scenarios
+    (article / blog / no metadata at all) without duplicating markup three times.
+  -->
+</head>
+<body>
+  <!--
+    header.js's decorate(block) is invoked directly below on a manually-constructed
+    block element, mirroring how scripts/aem.js's loadBlock() calls a block's default
+    export: decorate() receives the raw block element with .block class + data-block-name
+    already applied by decorateBlock() (see scripts/aem.js ~line 589-602) before loadBlock runs.
+  -->
+  <header class="header block" data-block-name="header" data-block-status="loading"></header>
+
+  <script type="module">
+    const params = new URLSearchParams(window.location.search);
+    const pageType = params.get('page-type');
+    if (pageType !== null && pageType !== 'none') {
+      const meta = document.createElement('meta');
+      meta.name = 'page-type';
+      meta.content = pageType;
+      document.head.appendChild(meta);
+    }
+
+    const { default: decorate } = await import('/blocks/header/header.js');
+    const block = document.querySelector('header.block');
+    await decorate(block);
+    document.body.dataset.decorated = 'true';
+  </script>
+</body>
+</html>

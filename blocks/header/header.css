@@ -320,3 +320,31 @@ header .breadcrumbs ol li[aria-current] {
     padding: 0 32px;
   }
 }
+
+/* page-type adaptive header (Feature 2) */
+header.header.page-type-article {
+  --page-type-accent: #1473e6;
+}
+
+header.header.page-type-blog {
+  --page-type-accent: #e2761b;
+}
+
+header.header.page-type-article .nav-wrapper,
+header.header.page-type-blog .nav-wrapper {
+  border-bottom: 3px solid var(--page-type-accent);
+}
+
+header .page-type-badge {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background-color: var(--page-type-accent);
+  color: var(--background-color, #fff);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  line-height: 1.6;
+  text-transform: uppercase;
+  vertical-align: middle;
+}

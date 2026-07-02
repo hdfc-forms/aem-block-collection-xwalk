@@ -19,4 +19,13 @@ module.exports = {
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
   },
+  overrides: [
+    {
+      // test tooling config + specs legitimately depend on devDependencies only
+      files: ['playwright.config.js', 'test/**/*.mjs', 'test/**/*.js'],
+      rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      },
+    },
+  ],
 };
