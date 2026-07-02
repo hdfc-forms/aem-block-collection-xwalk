@@ -1,0 +1,103 @@
+{
+  "definitions": [
+    {
+      "title": "Button",
+      "id": "nav-button",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Button",
+              "model": "nav-button"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "nav-button",
+      "fields": [
+        {
+          "component": "select",
+          "name": "navType",
+          "label": "Navigation Type",
+          "valueType": "string",
+          "required": true,
+          "options": [
+            { "name": "Page", "value": "page" },
+            { "name": "Section", "value": "section" },
+            { "name": "API Call", "value": "api" }
+          ]
+        },
+        {
+          "component": "text",
+          "name": "linkText",
+          "label": "Button Text",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text",
+          "name": "linkTitle",
+          "label": "Title (tooltip)",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "linkType",
+          "label": "Style",
+          "valueType": "string",
+          "options": [
+            { "name": "Default", "value": "" },
+            { "name": "Primary", "value": "primary" },
+            { "name": "Secondary", "value": "secondary" }
+          ]
+        },
+        {
+          "component": "aem-content",
+          "name": "page",
+          "label": "Page (for Page navigation)"
+        },
+        {
+          "component": "text",
+          "name": "section",
+          "label": "Section ID (for Section navigation)",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "apiUrl",
+          "label": "API URL (for API Call)",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "apiMethod",
+          "label": "API Method",
+          "valueType": "string",
+          "options": [
+            { "name": "GET", "value": "GET" },
+            { "name": "POST", "value": "POST" }
+          ]
+        },
+        {
+          "component": "aem-content",
+          "name": "apiSuccessPage",
+          "label": "Navigate To (after API success)"
+        },
+        {
+          "component": "text",
+          "name": "analyticsName",
+          "label": "Analytics Name (optional override)",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    { "id": "nav-button", "components": [] }
+  ]
+}
