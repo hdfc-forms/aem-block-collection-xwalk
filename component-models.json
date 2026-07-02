@@ -20,6 +20,26 @@
         "name": "keywords",
         "multi": true,
         "label": "Keywords"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "page-type",
+        "label": "Page Type",
+        "options": [
+          {
+            "name": "Generic (default)",
+            "value": ""
+          },
+          {
+            "name": "Article",
+            "value": "article"
+          },
+          {
+            "name": "Blog",
+            "value": "blog"
+          }
+        ]
       }
     ]
   },
