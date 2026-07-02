@@ -1,0 +1,8 @@
+/* blocks/button/button.css */
+
+/* Base .button/.secondary styling for both <a> and <button> already comes
+   from styles/styles.css's global 'a.button:any-link, button { ... }' rules -
+   this file only needs the block-level display context. */
+.button-block {
+  display: inline-block;
+}

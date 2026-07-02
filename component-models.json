@@ -181,28 +181,13 @@
     ]
   },
   {
-    "id": "nav-button",
+    "id": "button-page",
     "fields": [
       {
-        "component": "select",
-        "name": "navType",
-        "label": "Navigation Type",
-        "valueType": "string",
-        "required": true,
-        "options": [
-          {
-            "name": "Page",
-            "value": "page"
-          },
-          {
-            "name": "Section",
-            "value": "section"
-          },
-          {
-            "name": "API Call",
-            "value": "api"
-          }
-        ]
+        "component": "aem-content",
+        "name": "link",
+        "label": "Page to navigate to",
+        "required": true
       },
       {
         "component": "text",
@@ -236,50 +221,81 @@
             "value": "secondary"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "id": "button-section",
+    "fields": [
       {
-        "component": "aem-content",
-        "name": "page",
-        "label": "Page (for Page navigation)"
+        "component": "text",
+        "name": "link",
+        "label": "Section ID to scroll to",
+        "valueType": "string",
+        "required": true
       },
       {
         "component": "text",
-        "name": "section",
-        "label": "Section ID (for Section navigation)",
-        "valueType": "string"
+        "name": "linkText",
+        "label": "Button Text",
+        "valueType": "string",
+        "required": true
       },
       {
         "component": "text",
-        "name": "apiUrl",
-        "label": "API URL (for API Call)",
+        "name": "linkTitle",
+        "label": "Title (tooltip)",
         "valueType": "string"
       },
       {
         "component": "select",
-        "name": "apiMethod",
-        "label": "API Method",
+        "name": "linkType",
+        "label": "Style",
         "valueType": "string",
         "options": [
           {
-            "name": "GET",
-            "value": "GET"
+            "name": "Default",
+            "value": ""
           },
           {
-            "name": "POST",
-            "value": "POST"
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "button-api",
+    "fields": [
+      {
+        "component": "text",
+        "name": "link",
+        "label": "API URL to call",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Button Text",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title (tooltip)",
+        "valueType": "string"
       },
       {
         "component": "aem-content",
         "name": "apiSuccessPage",
-        "label": "Navigate To (after API success)"
-      },
-      {
-        "component": "text",
-        "name": "analyticsName",
-        "label": "Analytics Name (optional override)",
-        "valueType": "string"
+        "label": "Page to navigate to after success"
       }
     ]
   },

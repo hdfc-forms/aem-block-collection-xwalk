@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Nav Button Fixture</title>
+</head>
+<body>
+  <main>
+    <div class="section">
+      <!-- button-page: xwalk renders each model field as a positional
+           <div><div>value</div></div>, in the model's declared field order
+           (link, linkText, linkTitle, linkType) -->
+      <div class="button" data-block-name="button" data-aue-model="button-page" id="btn-page">
+        <div><div>/blog-demo</div></div>
+        <div><div>Go to Blog</div></div>
+        <div><div>Go to Blog Tooltip</div></div>
+        <div><div>primary</div></div>
+      </div>
+
+      <div class="button" data-block-name="button" data-aue-model="button-section" id="btn-section">
+        <div><div>features</div></div>
+        <div><div>Jump to Features</div></div>
+        <div><div></div></div>
+        <div><div></div></div>
+      </div>
+
+      <!-- no apiSuccessPage configured: tests the API-call + logging behavior
+           in isolation, without triggering the post-success redirect (that
+           one-line window.location.href assignment is simple enough to be
+           covered by code review rather than fighting real-navigation timing
+           in a headless test) -->
+      <div class="button" data-block-name="button" data-aue-model="button-api" id="btn-api">
+        <div><div>/api/mock-success</div></div>
+        <div><div>Call API</div></div>
+        <div><div></div></div>
+        <div><div></div></div>
+      </div>
+
+      <div id="features">Features section target</div>
+    </div>
+  </main>
+
+  <script type="module">
+    import decorate from '/blocks/button/button.js';
+
+    // Test-only: capture-phase listener that prevents real <a> navigation, so
+    // tests can exercise button.js's own click handling (analytics) without
+    // racing against a real page unload destroying the JS context mid-
+    // assertion. Does not call stopPropagation(), so button.js's own
+    // bubble-phase click handler still runs normally afterward. (Overriding
+    // Location.prototype.href the same way does not work - browsers protect
+    // Location as a platform object - so the #btn-api fixture instance below
+    // is deliberately configured without a success-redirect target.)
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) e.preventDefault();
+    }, true);
+
+    document.querySelectorAll('.button[data-aue-model]').forEach((block) => decorate(block));
+
+    // Mirrors scripts/delayed.js being imported ~3s after first render in the
+    // real loadPage() pipeline - the fixture only needs the dummy subscriber,
+    // not the delegated document click listener (the button block fires its
+    // own analytics directly and calls stopPropagation()).
+    import('/scripts/analytics.js').then(({ subscribe }) => {
+      subscribe('button:click', (digitalData) => {
+        // eslint-disable-next-line no-console
+        console.log('[dummy-analytics] digitalData:', digitalData);
+      });
+    });
+  </script>
+</body>
+</html>
