@@ -91,6 +91,10 @@
     ]
   },
   {
+    "id": "teaser",
+    "components": []
+  },
+  {
     "id": "video",
     "components": []
   }

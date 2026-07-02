@@ -1,0 +1,5 @@
+# wknd-cloud — generated 2026-07-02 from knowledge-base/migration-plans/wknd-cloud-plan.md
+# Edit this list before running bulk import.
+# Only one page type (home) was discoverable from nav at plan time — see plan Open Questions
+# about whether additional unlinked pages exist.
+https://publish-p101708-e2171406.adobeaemcloud.com/content/wknd-cloud/en/home.html
