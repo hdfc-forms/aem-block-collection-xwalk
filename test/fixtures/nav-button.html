@@ -58,16 +58,13 @@
 
     document.querySelectorAll('.button[data-aue-model]').forEach((block) => decorate(block));
 
-    // Mirrors scripts/delayed.js being imported ~3s after first render in the
-    // real loadPage() pipeline - the fixture only needs the dummy subscriber,
-    // not the delegated document click listener (the button block fires its
-    // own analytics directly and calls stopPropagation()).
-    import('/scripts/analytics.js').then(({ subscribe }) => {
-      subscribe('button:click', (digitalData) => {
-        // eslint-disable-next-line no-console
-        console.log('[dummy-analytics] digitalData:', digitalData);
-      });
-    });
+    // Import the REAL delayed.js (not just analytics.js directly) so the
+    // "fires once" test genuinely proves this block's stopPropagation()
+    // prevents double-counting against production's sitewide delegated
+    // .button click listener, not just against a fixture-only subscriber.
+    // window.__delayedReady lets tests wait for its subscribers to be
+    // registered before clicking, since the import itself is async.
+    import('/scripts/delayed.js').then(() => { window.__delayedReady = true; });
   </script>
 </body>
 </html>

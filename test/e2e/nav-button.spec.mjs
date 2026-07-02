@@ -30,6 +30,7 @@ test.describe('nav-button block', () => {
     const logs = collectDigitalDataLogs(page);
 
     await page.goto('/test/fixtures/nav-button.html');
+    await page.waitForFunction(() => window.__delayedReady);
     const btn = page.locator('#btn-page .button');
     await expect(btn).toHaveCount(1);
     await expect(btn).toHaveText('Go to Blog');
@@ -46,6 +47,7 @@ test.describe('nav-button block', () => {
   test('button-section scrolls to the target id and does not navigate away', async ({ page }) => {
     const logs = collectDigitalDataLogs(page);
     await page.goto('/test/fixtures/nav-button.html');
+    await page.waitForFunction(() => window.__delayedReady);
 
     const btn = page.locator('#btn-section .button');
     await expect(btn).toHaveAttribute('href', '#features');
@@ -67,6 +69,7 @@ test.describe('nav-button block', () => {
     const logs = collectDigitalDataLogs(page);
 
     await page.goto('/test/fixtures/nav-button.html');
+    await page.waitForFunction(() => window.__delayedReady);
     const btn = page.locator('#btn-api button.button');
     await expect(btn).toHaveCount(1); // renders a real <button>, not an <a>
 
@@ -87,6 +90,7 @@ test.describe('nav-button block', () => {
     const logs = collectDigitalDataLogs(page);
 
     await page.goto('/test/fixtures/nav-button.html');
+    await page.waitForFunction(() => window.__delayedReady);
     await page.locator('#btn-api button.button').click();
 
     await expect.poll(() => logs.length).toBeGreaterThan(0);
@@ -99,6 +103,7 @@ test.describe('nav-button block', () => {
     page.on('console', (msg) => consoleEntries.push(msg.text()));
 
     await page.goto('/test/fixtures/nav-button.html');
+    await page.waitForFunction(() => window.__delayedReady);
     await page.locator('#btn-page .button').click();
     await expect.poll(() => consoleEntries.filter((t) => t.startsWith('[dummy-analytics]')).length)
       .toBeGreaterThan(0);
