@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>Nav Button Fixture</title>
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="stylesheet" href="/blocks/button/button.css">
 </head>
 <body>
   <main>
@@ -57,6 +59,7 @@
     }, true);
 
     document.querySelectorAll('.button[data-aue-model]').forEach((block) => decorate(block));
+    document.body.classList.add('appear'); // styles.css hides body until scripts.js normally adds this
 
     // Import the REAL delayed.js (not just analytics.js directly) so the
     // "fires once" test genuinely proves this block's stopPropagation()
