@@ -9,3 +9,6 @@ helix-importer-ui
 .idea
 localhost.pem
 localhost-key.pem
+
+test-results/
+playwright-report/
