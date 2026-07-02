@@ -1,6 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
+import getMetadataSheetRow from '../../scripts/metadata-sheet.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -174,8 +175,13 @@ async function buildBreadcrumbs() {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
+  // check the /metadata.json sheet for a per-path header/page-type override
+  // (authored in AEM as /metadata, mapped to /metadata.json - see scripts/metadata-sheet.js)
+  // before falling back to page-level meta tags and hardcoded defaults
+  const sheetRow = await getMetadataSheetRow(window.location.pathname);
+
   // load nav as fragment
-  const navMeta = getMetadata('nav');
+  const navMeta = (sheetRow && sheetRow.header) || getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
   const fragment = await loadFragment(navPath);
 
@@ -242,8 +248,11 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // adapt header presentation based on page-type metadata (article/blog/generic fallback)
-  const pageType = getMetadata('page-type').trim().toLowerCase();
+  // adapt header presentation based on page-type (metadata sheet takes priority;
+  // page-level meta tag is a fallback for platforms where custom page metadata
+  // actually gets exported to <head> - it does not on this environment, see
+  // demo/02-architect-design.md's revision notes)
+  const pageType = ((sheetRow && sheetRow['page-type']) || getMetadata('page-type')).trim().toLowerCase();
   if (pageType === 'article' || pageType === 'blog') {
     block.classList.add(`page-type-${pageType}`);
     const badge = document.createElement('span');
