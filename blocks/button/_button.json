@@ -9,7 +9,8 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Button (Page)",
-              "model": "button-page"
+              "model": "button",
+              "classes": "page"
             }
           }
         }
@@ -24,7 +25,8 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Button (Section)",
-              "model": "button-section"
+              "model": "button",
+              "classes": "section"
             }
           }
         }
@@ -39,7 +41,8 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Button (API Call)",
-              "model": "button-api"
+              "model": "button",
+              "classes": "api"
             }
           }
         }
@@ -48,9 +51,9 @@
   ],
   "models": [
     {
-      "id": "button-page",
+      "id": "button",
       "fields": [
-        { "component": "aem-content", "name": "link", "label": "Page to navigate to", "required": true },
+        { "component": "text", "name": "link", "label": "Target (page path / section ID / API URL, depending on which Button variant is used)", "valueType": "string", "required": true },
         { "component": "text", "name": "linkText", "label": "Button Text", "valueType": "string", "required": true },
         { "component": "text", "name": "linkTitle", "label": "Title (tooltip)", "valueType": "string" },
         {
@@ -63,35 +66,8 @@
             { "name": "Primary", "value": "primary" },
             { "name": "Secondary", "value": "secondary" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "button-section",
-      "fields": [
-        { "component": "text", "name": "link", "label": "Section ID to scroll to", "valueType": "string", "required": true },
-        { "component": "text", "name": "linkText", "label": "Button Text", "valueType": "string", "required": true },
-        { "component": "text", "name": "linkTitle", "label": "Title (tooltip)", "valueType": "string" },
-        {
-          "component": "select",
-          "name": "linkType",
-          "label": "Style",
-          "valueType": "string",
-          "options": [
-            { "name": "Default", "value": "" },
-            { "name": "Primary", "value": "primary" },
-            { "name": "Secondary", "value": "secondary" }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "button-api",
-      "fields": [
-        { "component": "text", "name": "link", "label": "API URL to call", "valueType": "string", "required": true },
-        { "component": "text", "name": "linkText", "label": "Button Text", "valueType": "string", "required": true },
-        { "component": "text", "name": "linkTitle", "label": "Title (tooltip)", "valueType": "string" },
-        { "component": "aem-content", "name": "apiSuccessPage", "label": "Page to navigate to after success" }
+        },
+        { "component": "aem-content", "name": "apiSuccessPage", "label": "Navigate to (Button (API Call) only, after a successful response)" }
       ]
     }
   ],

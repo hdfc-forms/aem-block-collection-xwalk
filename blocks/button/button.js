@@ -1,22 +1,31 @@
 import { publish } from '../../scripts/analytics.js';
 import callApi from '../../scripts/api-client.js';
 
-// Field order matches each model's field order in blocks/button/_button.json
-// exactly - xwalk renders each model field as a positional
-// <div><div>value</div></div> (or <div><div><a href="...">...</a></div></div>
-// for aem-content reference fields), so readFields() reads block.children by
-// index rather than by name. Which field list applies is determined by the
-// block's data-aue-model attribute (set by xwalk to the definition's model id).
-const FIELD_ORDER = {
-  'button-page': ['link', 'linkText', 'linkTitle', 'linkType'],
-  'button-section': ['link', 'linkText', 'linkTitle', 'linkType'],
-  'button-api': ['link', 'linkText', 'linkTitle', 'apiSuccessPage'],
-};
+// Field order matches the single shared 'button' model's field order in
+// blocks/button/_button.json exactly - xwalk renders each model field as a
+// positional <div><div>value</div></div> (or
+// <div><div><a href="...">...</a></div></div> for the aem-content
+// apiSuccessPage field), so readFields() reads block.children by index.
+//
+// All three definitions (Button (Page)/(Section)/(API Call)) share this ONE
+// model - mirroring how teaser/teaser-hero/teaser-compact share one model and
+// differ only by an extra 'classes' value (page/section/api). This matters
+// for more than authoring convenience: the block loader in scripts/aem.js
+// derives which JS/CSS file to load from the model id (the first class on
+// the rendered block element), NOT the definition id or title. Three
+// separate models (button-page/button-section/button-api, as this file used
+// to declare) render as class="button-page" / "button-section" /
+// "button-api-call" - none of which match this file's location
+// (blocks/button/button.js), so decorate() below silently never runs and the
+// raw link/linkText/linkTitle fields fall back to default-content anchor
+// rendering (a real, unstyled, un-intercepted link - explains buttons that
+// "just navigate" instead of running any button.js logic at all).
+const FIELD_ORDER = ['link', 'linkText', 'linkTitle', 'linkType', 'apiSuccessPage'];
 
-function readFields(block, fieldOrder) {
+function readFields(block) {
   const values = {};
   [...block.children].forEach((cell, i) => {
-    const name = fieldOrder[i];
+    const name = FIELD_ORDER[i];
     if (!name) return;
     const link = cell.querySelector('a');
     values[name] = link ? link.getAttribute('href') : cell.textContent.trim();
@@ -30,7 +39,7 @@ function readFields(block, fieldOrder) {
  * @param {object} fields
  * @param {string} navType
  * @param {string} nextPageName
- * @param {object} [apiResult] present only for navType 'button-api'
+ * @param {object} [apiResult] present only for navType 'api'
  */
 function fireAnalytics(fields, navType, nextPageName, apiResult) {
   const digitalData = {
@@ -46,20 +55,23 @@ function fireAnalytics(fields, navType, nextPageName, apiResult) {
 }
 
 export default function decorate(block) {
-  const navType = block.dataset.aueModel; // 'button-page' | 'button-section' | 'button-api'
-  const fields = readFields(block, FIELD_ORDER[navType] || []);
+  // Variant comes from the extra class xwalk adds per definition (page/section/api),
+  // same mechanism as .teaser.hero / .teaser.compact - not from data-aue-model,
+  // since all three definitions share the same 'button' model/data-aue-model value.
+  const navType = ['page', 'section', 'api'].find((v) => block.classList.contains(v)) || 'page';
+  const fields = readFields(block);
   block.textContent = '';
   block.classList.add('button-block');
 
   let el;
-  if (navType === 'button-section') {
+  if (navType === 'section') {
     el = document.createElement('a');
     el.href = fields.link ? `#${fields.link}` : '#';
-  } else if (navType === 'button-api') {
+  } else if (navType === 'api') {
     el = document.createElement('button');
     el.type = 'button';
   } else {
-    // 'button-page' (also the fallback for any unrecognized model)
+    // 'page' (also the fallback for any unrecognized variant)
     el = document.createElement('a');
     el.href = fields.link || '#';
   }
@@ -78,11 +90,12 @@ export default function decorate(block) {
   el.addEventListener('click', async (event) => {
     event.stopPropagation();
     try {
-      if (navType === 'button-section') {
+      if (navType === 'section') {
         event.preventDefault();
         document.getElementById(fields.link)?.scrollIntoView({ behavior: 'smooth' });
         fireAnalytics(fields, navType, fields.link);
-      } else if (navType === 'button-api') {
+      } else if (navType === 'api') {
+        event.preventDefault();
         const result = await callApi(fields.link, { method: 'GET' });
         fireAnalytics(fields, navType, fields.apiSuccessPage || 'no-target', {
           url: fields.link,

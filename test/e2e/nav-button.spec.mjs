@@ -39,7 +39,7 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navType).toBe('button-page');
+    expect(logs[0].navType).toBe('page');
     expect(logs[0].button.name).toBe('Go to Blog');
     expect(logs[0].target.nextPageName).toBe('Go to Blog');
   });
@@ -54,7 +54,7 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navType).toBe('button-section');
+    expect(logs[0].navType).toBe('section');
     expect(logs[0].target.nextPageName).toBe('features');
     // preventDefault() is called for section nav - confirm we're still on the fixture page
     expect(page.url()).toContain('nav-button.html');
@@ -75,7 +75,7 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navType).toBe('button-api');
+    expect(logs[0].navType).toBe('api');
     expect(logs[0].api.url).toBe('/api/mock-success');
     expect(logs[0].api.method).toBe('GET');
     expect(logs[0].api.ok).toBe(true);

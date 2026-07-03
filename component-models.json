@@ -181,56 +181,12 @@
     ]
   },
   {
-    "id": "button-page",
-    "fields": [
-      {
-        "component": "aem-content",
-        "name": "link",
-        "label": "Page to navigate to",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkText",
-        "label": "Button Text",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title (tooltip)",
-        "valueType": "string"
-      },
-      {
-        "component": "select",
-        "name": "linkType",
-        "label": "Style",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Primary",
-            "value": "primary"
-          },
-          {
-            "name": "Secondary",
-            "value": "secondary"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "button-section",
+    "id": "button",
     "fields": [
       {
         "component": "text",
         "name": "link",
-        "label": "Section ID to scroll to",
+        "label": "Target (page path / section ID / API URL, depending on which Button variant is used)",
         "valueType": "string",
         "required": true
       },
@@ -266,36 +222,11 @@
             "value": "secondary"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "button-api",
-    "fields": [
-      {
-        "component": "text",
-        "name": "link",
-        "label": "API URL to call",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkText",
-        "label": "Button Text",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title (tooltip)",
-        "valueType": "string"
       },
       {
         "component": "aem-content",
         "name": "apiSuccessPage",
-        "label": "Page to navigate to after success"
+        "label": "Navigate to (Button (API Call) only, after a successful response)"
       }
     ]
   },

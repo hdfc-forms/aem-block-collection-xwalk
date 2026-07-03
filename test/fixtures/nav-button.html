@@ -9,19 +9,24 @@
 <body>
   <main>
     <div class="section">
-      <!-- button-page: xwalk renders each model field as a positional
-           <div><div>value</div></div>, in the model's declared field order
-           (link, linkText, linkTitle, linkType) -->
-      <div class="button" data-block-name="button" data-aue-model="button-page" id="btn-page">
+      <!-- All three variants share ONE model (blocks/button/_button.json),
+           so every instance renders the same 5 positional field divs
+           (link, linkText, linkTitle, linkType, apiSuccessPage) regardless
+           of variant - the variant class (page/section/api) is what
+           button.js reads to decide behavior, mirroring .teaser.hero /
+           .teaser.compact. -->
+      <div class="button page" data-block-name="button" id="btn-page">
         <div><div>/blog-demo</div></div>
         <div><div>Go to Blog</div></div>
         <div><div>Go to Blog Tooltip</div></div>
         <div><div>primary</div></div>
+        <div><div></div></div>
       </div>
 
-      <div class="button" data-block-name="button" data-aue-model="button-section" id="btn-section">
+      <div class="button section" data-block-name="button" id="btn-section">
         <div><div>features</div></div>
         <div><div>Jump to Features</div></div>
+        <div><div></div></div>
         <div><div></div></div>
         <div><div></div></div>
       </div>
@@ -31,9 +36,10 @@
            one-line window.location.href assignment is simple enough to be
            covered by code review rather than fighting real-navigation timing
            in a headless test) -->
-      <div class="button" data-block-name="button" data-aue-model="button-api" id="btn-api">
+      <div class="button api" data-block-name="button" id="btn-api">
         <div><div>/api/mock-success</div></div>
         <div><div>Call API</div></div>
+        <div><div></div></div>
         <div><div></div></div>
         <div><div></div></div>
       </div>
@@ -49,16 +55,13 @@
     // tests can exercise button.js's own click handling (analytics) without
     // racing against a real page unload destroying the JS context mid-
     // assertion. Does not call stopPropagation(), so button.js's own
-    // bubble-phase click handler still runs normally afterward. (Overriding
-    // Location.prototype.href the same way does not work - browsers protect
-    // Location as a platform object - so the #btn-api fixture instance below
-    // is deliberately configured without a success-redirect target.)
+    // bubble-phase click handler still runs normally afterward.
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a');
       if (a) e.preventDefault();
     }, true);
 
-    document.querySelectorAll('.button[data-aue-model]').forEach((block) => decorate(block));
+    document.querySelectorAll('.button.page, .button.section, .button.api').forEach((block) => decorate(block));
     document.body.classList.add('appear'); // styles.css hides body until scripts.js normally adds this
 
     // Import the REAL delayed.js (not just analytics.js directly) so the
