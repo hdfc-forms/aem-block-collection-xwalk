@@ -12,7 +12,7 @@ export default async function decorate(block) {
   const sheetRow = await getMetadataSheetRow(window.location.pathname);
 
   // load footer as fragment
-  const footerMeta = (sheetRow && sheetRow.Footer) || getMetadata('footer');
+  const footerMeta = (sheetRow && sheetRow.footer) || getMetadata('footer');
   const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
   const fragment = await loadFragment(footerPath);
 
