@@ -37,18 +37,6 @@
     ]
   },
   {
-    "id": "button-page",
-    "components": []
-  },
-  {
-    "id": "button-section",
-    "components": []
-  },
-  {
-    "id": "button-api",
-    "components": []
-  },
-  {
     "id": "cards",
     "components": [
       "card"
@@ -74,6 +62,18 @@
       "button",
       "title"
     ]
+  },
+  {
+    "id": "button-page",
+    "components": []
+  },
+  {
+    "id": "button-section",
+    "components": []
+  },
+  {
+    "id": "button-api",
+    "components": []
   },
   {
     "id": "table",

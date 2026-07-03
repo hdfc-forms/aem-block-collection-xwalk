@@ -181,56 +181,6 @@
     ]
   },
   {
-    "id": "button",
-    "fields": [
-      {
-        "component": "text",
-        "name": "link",
-        "label": "Target (page path / section ID / API URL, depending on which Button variant is used)",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkText",
-        "label": "Button Text",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title (tooltip)",
-        "valueType": "string"
-      },
-      {
-        "component": "select",
-        "name": "linkType",
-        "label": "Style",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Primary",
-            "value": "primary"
-          },
-          {
-            "name": "Secondary",
-            "value": "secondary"
-          }
-        ]
-      },
-      {
-        "component": "aem-content",
-        "name": "apiSuccessPage",
-        "label": "Navigate to (Button (API Call) only, after a successful response)"
-      }
-    ]
-  },
-  {
     "id": "card",
     "fields": [
       {
@@ -389,6 +339,56 @@
         "component": "text",
         "name": "linkText",
         "label": "Text"
+      }
+    ]
+  },
+  {
+    "id": "nav-button",
+    "fields": [
+      {
+        "component": "text",
+        "name": "link",
+        "label": "Target (page path / section ID / API URL, depending on which Button variant is used)",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Button Text",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title (tooltip)",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "linkType",
+        "label": "Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "apiSuccessPage",
+        "label": "Navigate to (Button (API Call) only, after a successful response)"
       }
     ]
   },

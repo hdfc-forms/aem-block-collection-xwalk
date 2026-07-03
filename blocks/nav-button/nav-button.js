@@ -1,9 +1,9 @@
 import { publish } from '../../scripts/analytics.js';
 import callApi from '../../scripts/api-client.js';
 
-// Field order matches the single shared 'button' model's field order in
-// blocks/button/_button.json exactly - xwalk renders each model field as a
-// positional <div><div>value</div></div> (or
+// Field order matches the single shared 'nav-button' model's field order in
+// blocks/nav-button/_nav-button.json exactly - xwalk renders each model field
+// as a positional <div><div>value</div></div> (or
 // <div><div><a href="...">...</a></div></div> for the aem-content
 // apiSuccessPage field), so readFields() reads block.children by index.
 //
@@ -12,14 +12,16 @@ import callApi from '../../scripts/api-client.js';
 // differ only by an extra 'classes' value (page/section/api). This matters
 // for more than authoring convenience: the block loader in scripts/aem.js
 // derives which JS/CSS file to load from the model id (the first class on
-// the rendered block element), NOT the definition id or title. Three
-// separate models (button-page/button-section/button-api, as this file used
-// to declare) render as class="button-page" / "button-section" /
-// "button-api-call" - none of which match this file's location
-// (blocks/button/button.js), so decorate() below silently never runs and the
-// raw link/linkText/linkTitle fields fall back to default-content anchor
-// rendering (a real, unstyled, un-intercepted link - explains buttons that
-// "just navigate" instead of running any button.js logic at all).
+// the rendered block element), NOT the definition id or title. The model id
+// must therefore be BOTH globally unique across the site's
+// component-models.json AND equal to this block's folder/file name
+// (nav-button). It is deliberately not "button": this project already ships
+// a separate default-content Button component (models/_button.json, model id
+// "button", resourceType core/franklin/components/button/v1/button, used for
+// rich-text CTAs) - reusing that id here silently produced two "button"
+// entries in the merged component-models.json, which corrupted Universal
+// Editor's model resolution SITE-WIDE (not just for this block), breaking
+// authoring even on unrelated pages with no nav-button instance on them.
 const FIELD_ORDER = ['link', 'linkText', 'linkTitle', 'linkType', 'apiSuccessPage'];
 
 function readFields(block) {

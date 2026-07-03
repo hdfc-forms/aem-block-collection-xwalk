@@ -4,18 +4,20 @@
   <meta charset="utf-8">
   <title>Nav Button Fixture</title>
   <link rel="stylesheet" href="/styles/styles.css">
-  <link rel="stylesheet" href="/blocks/button/button.css">
+  <link rel="stylesheet" href="/blocks/nav-button/nav-button.css">
 </head>
 <body>
   <main>
     <div class="section">
-      <!-- All three variants share ONE model (blocks/button/_button.json),
+      <!-- All three variants share ONE model (blocks/nav-button/_nav-button.json,
+           model id "nav-button" - deliberately not "button", which collides
+           with this project's separate default-content Button component),
            so every instance renders the same 5 positional field divs
            (link, linkText, linkTitle, linkType, apiSuccessPage) regardless
            of variant - the variant class (page/section/api) is what
-           button.js reads to decide behavior, mirroring .teaser.hero /
+           nav-button.js reads to decide behavior, mirroring .teaser.hero /
            .teaser.compact. -->
-      <div class="button page" data-block-name="button" id="btn-page">
+      <div class="nav-button page" data-block-name="nav-button" id="btn-page">
         <div><div>/blog-demo</div></div>
         <div><div>Go to Blog</div></div>
         <div><div>Go to Blog Tooltip</div></div>
@@ -23,7 +25,7 @@
         <div><div></div></div>
       </div>
 
-      <div class="button section" data-block-name="button" id="btn-section">
+      <div class="nav-button section" data-block-name="nav-button" id="btn-section">
         <div><div>features</div></div>
         <div><div>Jump to Features</div></div>
         <div><div></div></div>
@@ -36,7 +38,7 @@
            one-line window.location.href assignment is simple enough to be
            covered by code review rather than fighting real-navigation timing
            in a headless test) -->
-      <div class="button api" data-block-name="button" id="btn-api">
+      <div class="nav-button api" data-block-name="nav-button" id="btn-api">
         <div><div>/api/mock-success</div></div>
         <div><div>Call API</div></div>
         <div><div></div></div>
@@ -49,7 +51,7 @@
   </main>
 
   <script type="module">
-    import decorate from '/blocks/button/button.js';
+    import decorate from '/blocks/nav-button/nav-button.js';
 
     // Test-only: capture-phase listener that prevents real <a> navigation, so
     // tests can exercise button.js's own click handling (analytics) without
@@ -61,7 +63,7 @@
       if (a) e.preventDefault();
     }, true);
 
-    document.querySelectorAll('.button.page, .button.section, .button.api').forEach((block) => decorate(block));
+    document.querySelectorAll('.nav-button.page, .nav-button.section, .nav-button.api').forEach((block) => decorate(block));
     document.body.classList.add('appear'); // styles.css hides body until scripts.js normally adds this
 
     // Import the REAL delayed.js (not just analytics.js directly) so the
