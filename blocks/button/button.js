@@ -1,22 +1,16 @@
 import { publish } from '../../scripts/analytics.js';
 import callApi from '../../scripts/api-client.js';
 
-// Field order matches each model's field order in blocks/button/_button.json
-// exactly - xwalk renders each model field as a positional
-// <div><div>value</div></div> (or <div><div><a href="...">...</a></div></div>
-// for aem-content reference fields), so readFields() reads block.children by
-// index rather than by name. Which field list applies is determined by the
-// block's data-aue-model attribute (set by xwalk to the definition's model id).
-const FIELD_ORDER = {
-  'button-page': ['link', 'linkText', 'linkTitle', 'linkType'],
-  'button-section': ['link', 'linkText', 'linkTitle', 'linkType'],
-  'button-api': ['link', 'linkText', 'linkTitle', 'apiSuccessPage'],
-};
+// Field order matches _button.json's single 'nav-button' model exactly - xwalk
+// renders each model field as a positional <div><div>value</div></div> (or
+// <div><div><a href="...">...</a></div></div> for the aem-content
+// apiSuccessPage field), so readFields() reads block.children by index.
+const FIELD_ORDER = ['navMode', 'link', 'linkText', 'linkTitle', 'linkType', 'apiSuccessPage'];
 
-function readFields(block, fieldOrder) {
+function readFields(block) {
   const values = {};
   [...block.children].forEach((cell, i) => {
-    const name = fieldOrder[i];
+    const name = FIELD_ORDER[i];
     if (!name) return;
     const link = cell.querySelector('a');
     values[name] = link ? link.getAttribute('href') : cell.textContent.trim();
@@ -28,38 +22,36 @@ function readFields(block, fieldOrder) {
  * Publishes a button:click analytics event. Kept as a small wrapper so every
  * navigation type builds the same digitalData shape used elsewhere on the site.
  * @param {object} fields
- * @param {string} navType
  * @param {string} nextPageName
- * @param {object} [apiResult] present only for navType 'button-api'
+ * @param {object} [apiResult] present only for navMode 'api'
  */
-function fireAnalytics(fields, navType, nextPageName, apiResult) {
+function fireAnalytics(fields, nextPageName, apiResult) {
   const digitalData = {
     event: 'button_click',
     timestamp: new Date().toISOString(),
     page: { pageName: document.title },
     button: { name: fields.linkText },
     target: { nextPageName: nextPageName || 'no-target' },
-    navType,
+    navMode: fields.navMode,
   };
   if (apiResult) digitalData.api = apiResult;
   publish('button:click', digitalData);
 }
 
 export default function decorate(block) {
-  const navType = block.dataset.aueModel; // 'button-page' | 'button-section' | 'button-api'
-  const fields = readFields(block, FIELD_ORDER[navType] || []);
+  const fields = readFields(block);
   block.textContent = '';
   block.classList.add('button-block');
 
   let el;
-  if (navType === 'button-section') {
+  if (fields.navMode === 'section') {
     el = document.createElement('a');
     el.href = fields.link ? `#${fields.link}` : '#';
-  } else if (navType === 'button-api') {
+  } else if (fields.navMode === 'api') {
     el = document.createElement('button');
     el.type = 'button';
   } else {
-    // 'button-page' (also the fallback for any unrecognized model)
+    // 'page' (also the fallback for any unrecognized/legacy navMode value)
     el = document.createElement('a');
     el.href = fields.link || '#';
   }
@@ -78,13 +70,13 @@ export default function decorate(block) {
   el.addEventListener('click', async (event) => {
     event.stopPropagation();
     try {
-      if (navType === 'button-section') {
+      if (fields.navMode === 'section') {
         event.preventDefault();
         document.getElementById(fields.link)?.scrollIntoView({ behavior: 'smooth' });
-        fireAnalytics(fields, navType, fields.link);
-      } else if (navType === 'button-api') {
+        fireAnalytics(fields, fields.link);
+      } else if (fields.navMode === 'api') {
         const result = await callApi(fields.link, { method: 'GET' });
-        fireAnalytics(fields, navType, fields.apiSuccessPage || 'no-target', {
+        fireAnalytics(fields, fields.apiSuccessPage || 'no-target', {
           url: fields.link,
           method: 'GET',
           status: result.status,
@@ -95,7 +87,7 @@ export default function decorate(block) {
           window.location.href = fields.apiSuccessPage;
         }
       } else {
-        fireAnalytics(fields, navType, fields.linkText);
+        fireAnalytics(fields, fields.linkText);
       }
     } catch {
       // graceful degradation: analytics/API-call failures must never block

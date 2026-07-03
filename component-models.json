@@ -181,56 +181,33 @@
     ]
   },
   {
-    "id": "button-page",
+    "id": "nav-button",
     "fields": [
-      {
-        "component": "aem-content",
-        "name": "link",
-        "label": "Page to navigate to",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkText",
-        "label": "Button Text",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title (tooltip)",
-        "valueType": "string"
-      },
       {
         "component": "select",
-        "name": "linkType",
-        "label": "Style",
+        "name": "navMode",
+        "label": "Navigation Type",
         "valueType": "string",
+        "required": true,
         "options": [
           {
-            "name": "Default",
-            "value": ""
+            "name": "Page",
+            "value": "page"
           },
           {
-            "name": "Primary",
-            "value": "primary"
+            "name": "Section",
+            "value": "section"
           },
           {
-            "name": "Secondary",
-            "value": "secondary"
+            "name": "API Call",
+            "value": "api"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "button-section",
-    "fields": [
+      },
       {
         "component": "text",
         "name": "link",
-        "label": "Section ID to scroll to",
+        "label": "Target (page path / section ID / API URL, depending on Navigation Type above)",
         "valueType": "string",
         "required": true
       },
@@ -266,36 +243,11 @@
             "value": "secondary"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "button-api",
-    "fields": [
-      {
-        "component": "text",
-        "name": "link",
-        "label": "API URL to call",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkText",
-        "label": "Button Text",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title (tooltip)",
-        "valueType": "string"
       },
       {
         "component": "aem-content",
         "name": "apiSuccessPage",
-        "label": "Page to navigate to after success"
+        "label": "Navigate to (only used when Navigation Type = API Call, after a successful response)"
       }
     ]
   },
