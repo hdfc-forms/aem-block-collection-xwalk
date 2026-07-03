@@ -9,25 +9,19 @@
 <body>
   <main>
     <div class="section">
-      <!-- Single 'nav-button' block/model: xwalk renders each model field as
-           a positional <div><div>value</div></div>, in the model's declared
-           field order (navMode, link, linkText, linkTitle, linkType,
-           apiSuccessPage). apiSuccessPage renders as <a href="...">...</a>
-           since it's an aem-content field. -->
-      <div class="button" data-block-name="button" id="btn-page">
-        <div><div>page</div></div>
+      <!-- button-page: xwalk renders each model field as a positional
+           <div><div>value</div></div>, in the model's declared field order
+           (link, linkText, linkTitle, linkType) -->
+      <div class="button" data-block-name="button" data-aue-model="button-page" id="btn-page">
         <div><div>/blog-demo</div></div>
         <div><div>Go to Blog</div></div>
         <div><div>Go to Blog Tooltip</div></div>
         <div><div>primary</div></div>
-        <div><div></div></div>
       </div>
 
-      <div class="button" data-block-name="button" id="btn-section">
-        <div><div>section</div></div>
+      <div class="button" data-block-name="button" data-aue-model="button-section" id="btn-section">
         <div><div>features</div></div>
         <div><div>Jump to Features</div></div>
-        <div><div></div></div>
         <div><div></div></div>
         <div><div></div></div>
       </div>
@@ -37,11 +31,9 @@
            one-line window.location.href assignment is simple enough to be
            covered by code review rather than fighting real-navigation timing
            in a headless test) -->
-      <div class="button" data-block-name="button" id="btn-api">
-        <div><div>api</div></div>
+      <div class="button" data-block-name="button" data-aue-model="button-api" id="btn-api">
         <div><div>/api/mock-success</div></div>
         <div><div>Call API</div></div>
-        <div><div></div></div>
         <div><div></div></div>
         <div><div></div></div>
       </div>
@@ -59,14 +51,14 @@
     // assertion. Does not call stopPropagation(), so button.js's own
     // bubble-phase click handler still runs normally afterward. (Overriding
     // Location.prototype.href the same way does not work - browsers protect
-    // Location as a platform object - so the #btn-api fixture instance above
+    // Location as a platform object - so the #btn-api fixture instance below
     // is deliberately configured without a success-redirect target.)
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a');
       if (a) e.preventDefault();
     }, true);
 
-    document.querySelectorAll('.button[data-block-name="button"]').forEach((block) => decorate(block));
+    document.querySelectorAll('.button[data-aue-model]').forEach((block) => decorate(block));
     document.body.classList.add('appear'); // styles.css hides body until scripts.js normally adds this
 
     // Import the REAL delayed.js (not just analytics.js directly) so the

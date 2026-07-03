@@ -16,7 +16,9 @@
       "embed",
       "fragment",
       "form",
-      "nav-button",
+      "button-page",
+      "button-section",
+      "button-api",
       "hero",
       "image",
       "quote",
@@ -35,7 +37,15 @@
     ]
   },
   {
-    "id": "nav-button",
+    "id": "button-page",
+    "components": []
+  },
+  {
+    "id": "button-section",
+    "components": []
+  },
+  {
+    "id": "button-api",
     "components": []
   },
   {

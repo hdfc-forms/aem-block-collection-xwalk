@@ -1,22 +1,19 @@
 import { test, expect } from '@playwright/test';
 
-// Feature: nav-button block (single block, "Navigation Type" property selects
-// page / section / api behavior - see _button.json for why this is one model
-// with collapsible link/linkText/linkTitle/linkType fields rather than three
-// separate blocks: the xwalk/max-cells lint rule only allows this to stay
-// under one block if the fields use the "link" naming convention).
+// Feature: nav-button block (page / section / api navigation types).
 // - each variant renders a single clean <a>/<button class="button">, not the
 //   raw stacked field divs
 // - the block fires analytics itself (not the sitewide delegated listener in
 //   delayed.js) via stopPropagation(), proven by asserting exactly one
-//   dummy-analytics log per click even against the real delayed.js
+//   dummy-analytics log per click even though this fixture also imports the
+//   analytics module directly
 // - the api variant calls the configured URL via scripts/api-client.js and
 //   logs the result (status/ok) in the digitalData payload
 //
-// The fixture intercepts real <a> navigation (capture-phase, test-only - see
-// test/fixtures/nav-button.html) so these tests can exercise button.js's real
-// click handling without racing against a real page unload destroying the JS
-// context mid-assertion.
+// The fixture intercepts real <a> navigation and window.location.href
+// assignment (capture-phase, test-only - see test/fixtures/nav-button.html)
+// so these tests can exercise button.js's real click handling without racing
+// against a real page unload destroying the JS context mid-assertion.
 
 function collectDigitalDataLogs(page) {
   const entries = [];
@@ -29,7 +26,7 @@ function collectDigitalDataLogs(page) {
 }
 
 test.describe('nav-button block', () => {
-  test('Navigation Type "page" renders a single <a class="button primary"> and fires analytics', async ({ page }) => {
+  test('button-page renders a single <a class="button primary"> and fires analytics with navType', async ({ page }) => {
     const logs = collectDigitalDataLogs(page);
 
     await page.goto('/test/fixtures/nav-button.html');
@@ -42,12 +39,12 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navMode).toBe('page');
+    expect(logs[0].navType).toBe('button-page');
     expect(logs[0].button.name).toBe('Go to Blog');
     expect(logs[0].target.nextPageName).toBe('Go to Blog');
   });
 
-  test('Navigation Type "section" scrolls to the target id and does not navigate away', async ({ page }) => {
+  test('button-section scrolls to the target id and does not navigate away', async ({ page }) => {
     const logs = collectDigitalDataLogs(page);
     await page.goto('/test/fixtures/nav-button.html');
     await page.waitForFunction(() => window.__delayedReady);
@@ -57,13 +54,13 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navMode).toBe('section');
+    expect(logs[0].navType).toBe('button-section');
     expect(logs[0].target.nextPageName).toBe('features');
     // preventDefault() is called for section nav - confirm we're still on the fixture page
     expect(page.url()).toContain('nav-button.html');
   });
 
-  test('Navigation Type "api" calls the configured URL and logs the result (status/ok) in the digitalData payload', async ({ page }) => {
+  test('button-api calls the configured URL and logs the result (status/ok) in the digitalData payload', async ({ page }) => {
     await page.route('**/api/mock-success', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -78,7 +75,7 @@ test.describe('nav-button block', () => {
 
     await btn.click();
     await expect.poll(() => logs.length).toBeGreaterThan(0);
-    expect(logs[0].navMode).toBe('api');
+    expect(logs[0].navType).toBe('button-api');
     expect(logs[0].api.url).toBe('/api/mock-success');
     expect(logs[0].api.method).toBe('GET');
     expect(logs[0].api.ok).toBe(true);
@@ -88,7 +85,7 @@ test.describe('nav-button block', () => {
     // reviewed behavior; see the fixture's comment on why it isn't e2e-tested.
   });
 
-  test('Navigation Type "api" surfaces API failures in the digitalData payload instead of throwing', async ({ page }) => {
+  test('button-api surfaces API failures in the digitalData payload instead of throwing', async ({ page }) => {
     await page.route('**/api/mock-success', (route) => route.fulfill({ status: 500, body: 'error' }));
     const logs = collectDigitalDataLogs(page);
 
