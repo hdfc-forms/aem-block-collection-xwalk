@@ -21,9 +21,10 @@ export default async function decorate(block) {
     moveInstrumentation(row, tr);
 
     [...row.children].forEach((cell) => {
-      const td = document.createElement(i === 0 && header ? 'th' : 'td');
+      const isHeader = i === 0 && header;
+      const td = document.createElement(isHeader ? 'th' : 'td');
 
-      if (i === 0) td.setAttribute('scope', 'column');
+      if (isHeader) td.setAttribute('scope', 'col');
       td.innerHTML = cell.innerHTML;
       tr.append(td);
     });
